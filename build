@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# If this build is being run by Cloudflare Pages, install Rust
+if [ "$CF_PAGES" == "1" ]; then
+  curl https://sh.rustup.rs -sSf | sh -s -- -y --profile minimal
+  source "$HOME/.cargo/env"
+fi
+
+# Build the site
+cargo run --package site-generator --release
