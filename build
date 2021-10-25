@@ -2,8 +2,23 @@
 
 # If this build is being run by Cloudflare Pages, install Rust
 if [ "$CF_PAGES" == "1" ]; then
-  curl https://sh.rustup.rs -sSf | sh -s -- -y --profile minimal
+  curl --proto '=https' --tlsv1.3 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal
   source "$HOME/.cargo/env"
+fi
+
+# Switch to the directory containing this script
+cd "$(realpath "$(dirname "${BASH_SOURCE[0]}")")"
+
+# Delete the results of prior builds
+if [ -e dist ]; then
+  if [ -d dist ]; then
+    echo -n Deleting prior builds...
+    rm -rf dist
+    echo done
+  else
+    echo [ERROR] dist exists but is not a directory! Stopping build!
+    exit 1
+  fi
 fi
 
 # Build the site
